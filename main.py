@@ -2,6 +2,7 @@ import pygame
 from yaml import load
 import engine
 import os
+import numpy as np
 
 # Initialize Pygame
 pygame.init()
@@ -48,10 +49,30 @@ def main():
     gs = engine.GameState()
     loadImages()
     running = True
+    selected_square = ()
+    player_clicks = []
     while running:
         for e in pygame.event.get():
             if e.type == pygame.QUIT:
                 running = False
+            elif e.type == pygame.MOUSEBUTTONDOWN:
+                location = pygame.mouse.get_pos()
+                col = location[0]//SQ_SIZE
+                row = location[1]//SQ_SIZE
+                if selected_square == (row, col):
+                    selected_square = ()
+                    player_clicks = []
+                else:
+                    selected_square = (row, col)
+                    player_clicks.append(selected_square)
+                if len(player_clicks) == 2:
+                    move = engine.Move(
+                        player_clicks[0], player_clicks[1], gs.board)
+                    print(move.getChessNotation())
+                    gs.makeMove(move)
+                    selected_square = ()
+                    player_clicks = []
+
         draw(screen, gs)
         clock.tick(MAX_FPS)
         pygame.display.flip()
