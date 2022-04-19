@@ -38,7 +38,7 @@ class GameState():
         for row in range(len(self.board)):
             for col in range(len(self.board[row])):
                 turn = self.board[row][col][0]
-                if(turn == 'w' and self.whiteToMove) and (turn == 'b' and not self.whiteToMove):
+                if(turn == 'w' and self.whiteToMove) or (turn == 'b' and not self.whiteToMove):
                     piece = self.board[row][col][1]
                     if piece == 'p':
                         self.getPawnMoves(row, col, moves)
@@ -52,11 +52,22 @@ class GameState():
                         self.getQueenMoves(row, col, moves)
                     elif piece == 'K':
                         self.getKingMoves(row, col, moves)
-
         return moves
 
     def getPawnMoves(self, row, col, moves):
-        pass
+        if self.whiteToMove:
+            if self.board[row - 1][col] == "--":
+                moves.append(Move((row, col), (row-1, col), self.board))
+                if row == 6 and self.board[row-2][col] == "--":
+                    moves.append(Move((row, col), (row-2, col), self.board))
+            if col-1 >= 0:
+                if self.board[row-1][col-1][0] == 'b':
+                    moves.append(
+                        Move((row, col), (row-1, col-1), self.board))
+            if col+1 <= 7:
+                if self.board[row-1][col+1][0] == 'b':
+                    moves.append(
+                        Move((row, col), (row-1, col+1), self.board))
 
     def getRookMoves(self, row, col, moves):
         pass
