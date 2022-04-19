@@ -72,6 +72,9 @@ def main():
                     gs.makeMove(move)
                     selected_square = ()
                     player_clicks = []
+            elif e.type == pygame.KEYDOWN:
+                if e.key == pygame.K_z:
+                    gs.undoMove()
 
         draw(screen, gs)
         clock.tick(MAX_FPS)
