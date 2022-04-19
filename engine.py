@@ -30,6 +30,49 @@ class GameState():
             self.board[move.endRow][move.endCol] = move.pieceCaptured
             self.whiteToMove = not self.whiteToMove
 
+    def getValidMoves(self):
+        return self.getAllPossibleMoves()
+
+    def getAllPossibleMoves(self):
+        moves = []
+        for row in range(len(self.board)):
+            for col in range(len(self.board[row])):
+                turn = self.board[row][col][0]
+                if(turn == 'w' and self.whiteToMove) and (turn == 'b' and not self.whiteToMove):
+                    piece = self.board[row][col][1]
+                    if piece == 'p':
+                        self.getPawnMoves(row, col, moves)
+                    elif piece == 'R':
+                        self.getRookMoves(row, col, moves)
+                    elif piece == 'B':
+                        self.getBishopMoves(row, col, moves)
+                    elif piece == 'N':
+                        self.getKnightMoves(row, col, moves)
+                    elif piece == 'Q':
+                        self.getQueenMoves(row, col, moves)
+                    elif piece == 'K':
+                        self.getKingMoves(row, col, moves)
+
+        return moves
+
+    def getPawnMoves(self, row, col, moves):
+        pass
+
+    def getRookMoves(self, row, col, moves):
+        pass
+
+    def getBishopMoves(self, row, col, moves):
+        pass
+
+    def getKnightMoves(self, row, col, moves):
+        pass
+
+    def getQueenMoves(self, row, col, moves):
+        pass
+
+    def getKingMoves(self, row, col, moves):
+        pass
+
 
 class Move():
     ranksToRows = {"1": 7, "2": 6, "3": 5, "4": 4,
@@ -46,6 +89,13 @@ class Move():
         self.endCol = end[1]
         self.pieceMoved = board[self.startRow][self.startCol]
         self.pieceCaptured = board[self.endRow][self.endCol]
+        self.moveID = self.startRow * 1000 + self.startCol * \
+            100 + self.endRow * 10 + self.endCol
+
+    def __eq__(self, other):
+        if isinstance(other, Move):
+            return self.moveID == other.moveID
+        return False
 
     def getChessNotation(self):
         return self.getRankFile(self.startRow, self.startCol) + self.getRankFile(self.endRow, self.endCol)

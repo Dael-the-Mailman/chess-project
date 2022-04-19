@@ -47,6 +47,9 @@ def main():
     clock = pygame.time.Clock()
     screen.fill(pygame.Color("white"))
     gs = engine.GameState()
+    validMoves = gs.getValidMoves()
+    moveMade = False
+
     loadImages()
     running = True
     selected_square = ()
@@ -69,12 +72,19 @@ def main():
                     move = engine.Move(
                         player_clicks[0], player_clicks[1], gs.board)
                     print(move.getChessNotation())
-                    gs.makeMove(move)
+                    if move in validMoves:
+                        gs.makeMove(move)
+                        moveMade = True
                     selected_square = ()
                     player_clicks = []
             elif e.type == pygame.KEYDOWN:
                 if e.key == pygame.K_z:
                     gs.undoMove()
+                    moveMade = True
+
+        if moveMade:
+            validMoves = gs.getValidMoves()
+            moveMade = False
 
         draw(screen, gs)
         clock.tick(MAX_FPS)
