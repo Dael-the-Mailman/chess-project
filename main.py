@@ -71,7 +71,6 @@ def main():
                 if len(player_clicks) == 2:
                     move = engine.Move(
                         player_clicks[0], player_clicks[1], gs.board)
-                    print(move.getChessNotation())
                     if move in validMoves:
                         gs.makeMove(move)
                         moveMade = True

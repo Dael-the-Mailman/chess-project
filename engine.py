@@ -1,5 +1,7 @@
 import numpy as np
 
+opponentDict = {'w': 'b', 'b': 'w'}
+
 
 class GameState():
     def __init__(self):
@@ -7,8 +9,8 @@ class GameState():
             ["bR", "bN", "bB", "bQ", "bK", "bB", "bN", "bR"],
             ["bp", "bp", "bp", "bp", "bp", "bp", "bp", "bp"],
             ["--", "--", "--", "--", "--", "--", "--", "--"],
-            ["--", "--", "--", "--", "--", "--", "--", "--"],
-            ["--", "--", "--", "--", "--", "--", "--", "--"],
+            ["--", "--", "--", "wR", "--", "--", "--", "--"],
+            ["--", "--", "--", "bp", "--", "--", "--", "--"],
             ["--", "--", "--", "--", "--", "--", "--", "--"],
             ["wp", "wp", "wp", "wp", "wp", "wp", "wp", "wp"],
             ["wR", "wN", "wB", "wQ", "wK", "wB", "wN", "wR"]
@@ -59,28 +61,72 @@ class GameState():
                     moves.append(
                         Move((row, col), (row-1, col+1), self.board))
         else:
-            if self.board[row+1][col] == "--":
-                moves.append(Move((row, col), (row+1, col), self.board))
-                if row == 1 and self.board[row+2][col] == "--":
-                    moves.append(Move((row, col), (row+2, col), self.board))
-            if col-1 >= 0:
-                if self.board[row+1][col-1][0] == 'w':
-                    moves.append(
-                        Move((row, col), (row+1, col-1), self.board))
-            if col+1 <= 7:
-                if self.board[row+1][col+1][0] == 'w':
-                    moves.append(
-                        Move((row, col), (row+1, col+1), self.board))
+            if row + 1 < 8:
+                if self.board[row+1][col] == "--":
+                    moves.append(Move((row, col), (row+1, col), self.board))
+                    if row == 1 and self.board[row+2][col] == "--":
+                        moves.append(
+                            Move((row, col), (row+2, col), self.board))
+                if col-1 >= 0:
+                    if self.board[row+1][col-1][0] == 'w':
+                        moves.append(
+                            Move((row, col), (row+1, col-1), self.board))
+                if col+1 <= 7:
+                    if self.board[row+1][col+1][0] == 'w':
+                        moves.append(
+                            Move((row, col), (row+1, col+1), self.board))
 
     def getRookMoves(self, row, col, moves):
-        # Check up
+        color = self.board[row][col][0]
+        opponent = opponentDict[color]
 
         # Check down
+        if row + 1 < 8:
+            for r in range(row+1, 8):
+                if self.board[r][col] == "--":
+                    moves.append(
+                        Move((row, col), (r, col), self.board))
+                if self.board[r][col][0] == opponent:
+                    moves.append(
+                        Move((row, col), (r, col), self.board))
+                    break
+                if self.board[r][col][0] == color:
+                    break
+        # Check Up
+        for r in range(row-1, -1, -1):
+            if self.board[r][col] == "--":
+                moves.append(
+                    Move((row, col), (r, col), self.board))
+            if self.board[r][col][0] == opponent:
+                moves.append(
+                    Move((row, col), (r, col), self.board))
+                break
+            if self.board[r][col][0] == color:
+                break
 
         # Check right
-
+        if col + 1 < 8:
+            for c in range(col+1, 8):
+                if self.board[row][c] == "--":
+                    moves.append(
+                        Move((row, col), (row, c), self.board))
+                if self.board[row][c][0] == opponent:
+                    moves.append(
+                        Move((row, col), (row, c), self.board))
+                    break
+                if self.board[row][c][0] == color:
+                    break
         # Check left
-        pass
+        for c in range(col-1, -1, -1):
+            if self.board[row][c] == "--":
+                moves.append(
+                    Move((row, col), (row, c), self.board))
+            if self.board[row][c][0] == opponent:
+                moves.append(
+                    Move((row, col), (row, c), self.board))
+                break
+            if self.board[row][c][0] == color:
+                break
 
     def getBishopMoves(self, row, col, moves):
         pass
