@@ -10,7 +10,7 @@ class GameState():
             ["bp", "bp", "bp", "bp", "bp", "bp", "bp", "bp"],
             ["--", "--", "--", "--", "--", "--", "--", "--"],
             ["--", "--", "--", "wB", "--", "--", "--", "--"],
-            ["--", "--", "--", "bp", "--", "--", "--", "--"],
+            ["--", "--", "--", "bR", "--", "--", "--", "--"],
             ["--", "--", "--", "--", "--", "--", "--", "--"],
             ["wp", "wp", "wp", "wp", "wp", "wp", "wp", "wp"],
             ["wR", "wN", "wB", "wQ", "wK", "wB", "wN", "wR"]
@@ -80,53 +80,29 @@ class GameState():
         color = self.board[row][col][0]
         opponent = opponentDict[color]
 
-        # Check down
-        if row + 1 < 8:
-            for r in range(row+1, 8):
-                if self.board[r][col] == "--":
-                    moves.append(
-                        Move((row, col), (r, col), self.board))
-                if self.board[r][col][0] == opponent:
-                    moves.append(
-                        Move((row, col), (r, col), self.board))
+        for i in range(4):
+            dr = 0
+            dc = 0
+            while True:
+                if i == 0:
+                    dr += 1
+                elif i == 1:
+                    dr -= 1
+                elif i == 2:
+                    dc += 1
+                elif i == 3:
+                    dc -= 1
+                if (row + dr >= 8) or (row + dr < 0) or (col + dc >= 8) or (col + dc < 0):
                     break
-                if self.board[r][col][0] == color:
-                    break
-        # Check Up
-        for r in range(row-1, -1, -1):
-            if self.board[r][col] == "--":
-                moves.append(
-                    Move((row, col), (r, col), self.board))
-            if self.board[r][col][0] == opponent:
-                moves.append(
-                    Move((row, col), (r, col), self.board))
-                break
-            if self.board[r][col][0] == color:
-                break
-
-        # Check right
-        if col + 1 < 8:
-            for c in range(col+1, 8):
-                if self.board[row][c] == "--":
+                if self.board[row + dr][col + dc] == "--":
                     moves.append(
-                        Move((row, col), (row, c), self.board))
-                if self.board[row][c][0] == opponent:
+                        Move((row, col), (row + dr, col + dc), self.board))
+                if self.board[row + dr][col + dc][0] == opponent:
                     moves.append(
-                        Move((row, col), (row, c), self.board))
+                        Move((row, col), (row + dr, col + dc), self.board))
                     break
-                if self.board[row][c][0] == color:
+                if self.board[row + dr][col + dc][0] == color:
                     break
-        # Check left
-        for c in range(col-1, -1, -1):
-            if self.board[row][c] == "--":
-                moves.append(
-                    Move((row, col), (row, c), self.board))
-            if self.board[row][c][0] == opponent:
-                moves.append(
-                    Move((row, col), (row, c), self.board))
-                break
-            if self.board[row][c][0] == color:
-                break
 
     def getBishopMoves(self, row, col, moves):
         color = self.board[row][col][0]
