@@ -9,14 +9,14 @@ class GameState():
             ["bR", "bN", "bB", "bQ", "bK", "bB", "bN", "bR"],
             ["bp", "bp", "bp", "bp", "bp", "bp", "bp", "bp"],
             ["--", "--", "--", "--", "--", "--", "--", "--"],
-            ["--", "--", "--", "wB", "--", "--", "--", "--"],
-            ["--", "--", "--", "bR", "--", "--", "--", "--"],
+            ["--", "--", "--", "wQ", "--", "--", "--", "--"],
+            ["--", "--", "--", "bQ", "--", "--", "--", "--"],
             ["--", "--", "--", "--", "--", "--", "--", "--"],
             ["wp", "wp", "wp", "wp", "wp", "wp", "wp", "wp"],
             ["wR", "wN", "wB", "wQ", "wK", "wB", "wN", "wR"]
         ])
         self.moveFunctions = {"p": self.getPawnMoves, "R": self.getRookMoves, "N": self.getKnightMoves,
-                              "B": self.getBishopMoves, "Q": self.getBishopMoves, "K": self.getKingMoves}
+                              "B": self.getBishopMoves, "Q": self.getQueenMoves, "K": self.getKingMoves}
         self.whiteToMove = True
         self.moveHistory = []
 
@@ -142,7 +142,44 @@ class GameState():
         pass
 
     def getQueenMoves(self, row, col, moves):
-        pass
+        color = self.board[row][col][0]
+        opponent = opponentDict[color]
+
+        for i in range(8):
+            dr = 0
+            dc = 0
+            while True:
+                if i == 0:
+                    dr += 1
+                    dc += 1
+                elif i == 1:
+                    dr -= 1
+                    dc += 1
+                elif i == 2:
+                    dr += 1
+                    dc -= 1
+                elif i == 3:
+                    dr -= 1
+                    dc -= 1
+                elif i == 4:
+                    dr += 1
+                elif i == 5:
+                    dr -= 1
+                elif i == 6:
+                    dc += 1
+                elif i == 7:
+                    dc -= 1
+                if (row + dr >= 8) or (row + dr < 0) or (col + dc >= 8) or (col + dc < 0):
+                    break
+                if self.board[row + dr][col + dc] == "--":
+                    moves.append(
+                        Move((row, col), (row + dr, col + dc), self.board))
+                if self.board[row + dr][col + dc][0] == opponent:
+                    moves.append(
+                        Move((row, col), (row + dr, col + dc), self.board))
+                    break
+                if self.board[row + dr][col + dc][0] == color:
+                    break
 
     def getKingMoves(self, row, col, moves):
         pass
